@@ -1,41 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 function App() {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [data, setData] = useState([]);
+
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('tasks'));
+    const savedData = JSON.parse(localStorage.getItem("tasks"));
     if (savedData) {
       setData(savedData);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(data));
+    localStorage.setItem("tasks", JSON.stringify(data));
   }, [data]);
 
-  function handleClick(e) {
+  const handleClick = (e) => {
     e.preventDefault();
     if (name.length >= 5) {
-      const user = {
+      const newTask = {
         name,
+        completed: false,
       };
-      setData([...data, user]);
-      setName('');
+      setData([...data, newTask]);
+      setName("");
     } else {
-      alert('5 ta dan ko‘proq belgi yozing');
+      alert("5 ta dan ko‘proq belgi yozing");
     }
-  }
+  };
 
-  function handleDeleteAll(e) {
+  const handleDeleteAll = (e) => {
     e.preventDefault();
     setData([]);
-    localStorage.removeItem('tasks');
-  }
+    localStorage.removeItem("tasks");
+  };
 
-  function handleDelete(index) {
+  const handleDelete = (index) => {
     setData(data.filter((_, i) => i !== index));
-  }
+  };
+
+  const toggleCompleted = (index) => {
+    const updatedData = data.map((task, i) =>
+      i === index ? { ...task, completed: !task.completed } : task
+    );
+    setData(updatedData);
+  };
+
+  const completedTasks = data.filter((task) => task.completed).length;
+  const progress = data.length ? (completedTasks / data.length) * 100 : 0;
 
   return (
     <div>
@@ -62,16 +74,37 @@ function App() {
             Delete All 🗑
           </button>
         </form>
+
+        <div className="progress-bar bg-gray-300 rounded-md h-[20px] w-[400px] m-auto mt-5">
+          <div
+            className="bg-lime-700 h-[20px] rounded-md"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <p className="mt-2">{`Progress: ${completedTasks} of ${data.length} (${progress.toFixed(
+          1
+        )}%)`}</p>
+
         {data.length > 0 &&
-          data.map((v, i) => (
+          data.map((task, i) => (
             <div
               key={i}
-              className="bg-gray-50 ml-36 w-[400px] h-[60px] text-left rounded-md wrap flex mt-2 justify-between align-middle"
+              className={`bg-gray-50 ml-36 w-[400px] h-[60px] text-left rounded-md flex mt-2 justify-between items-center ${
+                task.completed ? "line-through text-gray-500" : ""
+              }`}
             >
-              <div className="pt-4">{v.name}</div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleCompleted(i)}
+                  className="mr-3"
+                />
+                <div>{task.name}</div>
+              </div>
               <button
                 onClick={() => handleDelete(i)}
-                className="border text-[18px] mt-1 text-white bg-red-500 w-[100px] h-[50px] rounded-md"
+                className="border text-[18px] text-white bg-red-500 w-[100px] h-[50px] rounded-md"
               >
                 Delete 🗑
               </button>
@@ -84,56 +117,75 @@ function App() {
 
 export default App;
 
+// 3
 
-// 3-masala
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+
+// function UserCard({ user }) {
+//   return (
+//     <div className="border p-4 rounded-lg shadow-md bg-white text-gray-700">
+//       <h2 className="text-xl font-semibold">{user.name}</h2>
+//       <p className="text-sm text-gray-500">{user.email}</p>
+//       <p className="text-sm mt-2">
+//         <strong>Company:</strong> {user.company.name}
+//       </p>
+//       <p className="text-sm">
+//         <strong>Phone:</strong> {user.phone}
+//       </p>
+//     </div>
+//   );
+// }
 
 // function Users() {
 //   const [users, setUsers] = useState([]);
-//   const [loading, setLoading] = useState(true)
+//   const [loading, setLoading] = useState(true);
+//   const [search, setSearch] = useState("");
+
 //   useEffect(() => {
-//     axios.
-//     get('https://jsonplaceholder.typicode.com/users')
+//     axios
+//       .get("https://jsonplaceholder.typicode.com/users")
 //       .then((response) => {
-//         setUsers(response.data);  
+//         setUsers(response.data);
 //       })
 //       .catch((error) => {
 //         console.log(error);
 //       })
-//       .finally(() =>{
-//         setLoading(false)
-//       })
+//       .finally(() => {
+//         setLoading(false);
+//       });
 //   }, []);
+
+//   const filteredUsers = users.filter((user) =>
+//     user.name.toLowerCase().includes(search.toLowerCase())
+//   );
 
 //   return (
 //     <div className="container mx-auto mt-8">
 //       <h1 className="text-3xl font-bold text-center mb-6">User List</h1>
-//       {
-//         loading && <p>loading ...</p>
-//       }
+//       <div className="mb-6 text-center">
+//         <input
+//           type="text"
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           className="border rounded-lg w-[300px] h-[40px] p-2 shadow-sm"
+//           placeholder="Search by name..."
+//         />
+//       </div>
+//       {loading && <p className="text-center">Yuklanmoqda...</p>}
 //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//         {users.length > 0 && users.map((v,i) => (
-//           <div
-//             key={i}
-//             className="border p-4 rounded-lg shadow-md bg-white text-gray-700"
-//           >
-//             <h2 className="text-xl font-semibold">{v.name}</h2>
-//             <p className="text-sm text-gray-500">{v.email}</p>
-//             <p className="text-sm mt-2">
-//               <strong>Company:</strong> {v.company.name}
-//             </p>
-//             <p className="text-sm">
-//               <strong>Phone:</strong> {v.phone}
-//             </p>
-//            </div>
-//         ))}
+//         {!loading && filteredUsers.length > 0 ? (
+//           filteredUsers.map((user) => <UserCard key={user.id} user={user} />)
+//         ) : (
+//           !loading && <p className="text-center">No users found!</p>
+//         )}
 //       </div>
 //     </div>
 //   );
 // }
 
 // export default Users;
+
 
 
 // 4-masala

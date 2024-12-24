@@ -14,10 +14,6 @@
     --link_color: blue;
 }
 
-/* [set-theme="text-dark"] {
-    --body_color: white;
-} */
-
 body {
     background-color: var(--body_background);
     color: var(--body_color);

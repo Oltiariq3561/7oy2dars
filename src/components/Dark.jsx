@@ -17,9 +17,13 @@ function Dark() {
 
   return (
     <div>
-      <input type="checkbox" onChange={toggleTheme} />
-      <h1 className={textTheme}>Salomat</h1>
-    </div>
+      <input type="checkbox" className="ml-[500px]" onChange={toggleTheme} />
+      <div className="dark text-orange-500 text-3xl ml-[500px]">
+      <h1 className={textTheme}>Dark</h1>
+        
+        </div>
+        
+        </div>
   );
 }
 

@@ -2,9 +2,9 @@
 import React from 'react'
 import Vazifa1 from './Pages/Vazifa1'
 import Users from './Pages/Vazifa3'
-import Dashboard from './components/Dashboard'
+import Dashboard from './components/Dashboard.jsx'
 import Vazifa2 from './Pages/Vazifa2'
-import Dark from './components/Dark'
+import Dark from './components/Dark.jsx'
 function App() {
   return (
     <div>
@@ -16,5 +16,4 @@ function App() {
     </div>
   )
 }
-
 export default App

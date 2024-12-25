@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Counter from './counter';
+import Counter from './Counter.jsx';
 
 function Dashboard() {
   const [counter1, setCounter1] = useState(0);
